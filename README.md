@@ -2,4 +2,12 @@
 
 Legacy eCommerce API, superseded by version 2: https://github.com/vippsas/vipps-ecom-api
 
-Documewntation provided for reference.
+Documentation provided for reference.
+
+See the Vipps Developers repository for
+a "getting started" guide,
+information about product activation,
+contact information,
+contribution guidelines,
+etc:
+https://github.com/vippsas/vipps-developers  
