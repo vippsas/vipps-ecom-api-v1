@@ -1,2 +1,3 @@
-# vipps-ecom-api-v1
-Legacy eCommerce API, superseded by v2: https://github.com/vippsas/vipps-ecom-api
+# Vipps eCommerce API, version 1
+
+Legacy eCommerce API, superseded by version 2: https://github.com/vippsas/vipps-ecom-api
