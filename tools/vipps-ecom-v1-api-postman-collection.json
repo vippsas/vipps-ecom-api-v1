@@ -1,0 +1,309 @@
+{
+	"info": {
+		"_postman_id": "d775ef5e-a944-4a4a-98f9-569634aeb035",
+		"name": "eCommerce API v1 - Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Access Token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b8c9ba79-1c35-4134-a08e-b54be8bb06e5",
+						"exec": [
+							"pm.environment.set(\"access_token\", pm.response.json().access_token);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"disabled": true
+					},
+					{
+						"key": "client_id",
+						"value": "{{client_id}}"
+					},
+					{
+						"key": "client_secret",
+						"value": "{{client_secret}}"
+					},
+					{
+						"key": "Ocp-Apim-Subscription-Key",
+						"value": "{{Ocp-Apim-Subscription-Key-Access-Token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{base_url}}/accesstoken/get",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"accesstoken",
+						"get"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Initiate Payment",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "fd2bef46-d27f-4bb9-8e40-d3dea5635be6",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "9f055780-9f92-451f-bdd5-e36e8feb46f0",
+						"exec": [
+							"pm.environment.set('orderId',pm.environment.get('merchantSerialNumber') + (new Date()).getTime());"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "bearer {{access_token}}"
+					},
+					{
+						"key": "X-Request-Id",
+						"value": "{{$timestamp}}"
+					},
+					{
+						"key": "Ocp-Apim-Subscription-Key",
+						"value": "{{Ocp-Apim-Subscription-Key-Ecom}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"merchantInfo\": {\n        \"merchantSerialNumber\": \"{{merchantSerialNumber}}\",\n        \"callBack\": \"{{callBack}}\"\n    },\n    \"customerInfo\": {\n        \"mobileNumber\": \"{{mobileNumber}}\"\n    },\n    \"transaction\": {\n        \"orderId\": \"{{orderId}}\",\n        \"amount\": {{amount}},\n        \"transactionText\": \"{{transactionText}}\"\n    }\n}\n"
+				},
+				"url": {
+					"raw": "{{base_url}}/ecomm/v1/payments",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"ecomm",
+						"v1",
+						"payments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Capture Payment",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "bearer {{access_token}}"
+					},
+					{
+						"key": "X-Request-Id",
+						"value": "{{$timestamp}}"
+					},
+					{
+						"key": "Accept-Language",
+						"value": "en",
+						"disabled": true
+					},
+					{
+						"key": "X-App-Id",
+						"value": "{{client_id}}",
+						"disabled": true
+					},
+					{
+						"key": "Ocp-Apim-Subscription-Key",
+						"value": "{{Ocp-Apim-Subscription-Key-Ecom}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"merchantInfo\": {\r\n        \"merchantSerialNumber\": \"{{merchantSerialNumber}}\"\r\n    },\r\n    \"transaction\": {\r\n        \"amount\": \"{{amount_capture}}\",\r\n        \"transactionText\":\"{{transTextCapture}}\"\r\n    }\r\n }\r\n"
+				},
+				"url": {
+					"raw": "{{base_url}}/ecomm/v1/payments/{{orderId}}/capture",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"ecomm",
+						"v1",
+						"payments",
+						"{{orderId}}",
+						"capture"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Refund Payment",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "bearer {{access_token}}"
+					},
+					{
+						"key": "X-Request-Id",
+						"value": "{{$timestamp}}"
+					},
+					{
+						"key": "Ocp-Apim-Subscription-Key",
+						"value": "{{Ocp-Apim-Subscription-Key-Ecom}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"merchantInfo\": {\r\n        \"merchantSerialNumber\": \"{{merchantSerialNumber}}\"\r\n    },\r\n    \"transaction\": {\r\n        \"amount\": \"{{amount}}\",\r\n        \"transactionText\":\"Refundering\"\r\n    }\r\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/ecomm/v1/payments/{{orderId}}/refund",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"ecomm",
+						"v1",
+						"payments",
+						"{{orderId}}",
+						"refund"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Cancel Payment",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "bearer {{access_token}}"
+					},
+					{
+						"key": "X-Request-Id",
+						"value": "{{$timestamp}}",
+						"disabled": true
+					},
+					{
+						"key": "Ocp-Apim-Subscription-Key",
+						"value": "{{Ocp-Apim-Subscription-Key-Ecom}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"merchantInfo\": {\r\n        \"merchantSerialNumber\": \"{{merchantSerialNumber}}\"\r\n    },\r\n    \"transaction\": {\r\n        \"transactionText\":\"{{transTextCancel}}\"\r\n    }\r\n }\r\n"
+				},
+				"url": {
+					"raw": "{{base_url}}/ecomm/v1/payments/{{orderId}}/cancel",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"ecomm",
+						"v1",
+						"payments",
+						"{{orderId}}",
+						"cancel"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Payment Details",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "bearer {{access_token}}"
+					},
+					{
+						"key": "X-Request-Id",
+						"value": "{{$timestamp}}",
+						"disabled": true
+					},
+					{
+						"key": "Accept-Language",
+						"value": "en"
+					},
+					{
+						"key": "Ocp-Apim-Subscription-Key",
+						"value": "{{Ocp-Apim-Subscription-Key-Ecom}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{base_url}}/ecomm/v1/payments/{{orderId}}/serialNumber/{{merchantSerialNumber}}/details",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"ecomm",
+						"v1",
+						"payments",
+						"{{orderId}}",
+						"serialNumber",
+						"{{merchantSerialNumber}}",
+						"details"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
